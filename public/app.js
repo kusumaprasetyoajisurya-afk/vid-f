@@ -50,6 +50,17 @@ async function loadVideos() {
     videos.forEach(v => {
       const li = document.createElement('li');
       li.textContent = `${v.title} - $${v.price.toFixed(2)}`;
+      const deleteButton = document.createElement('button');
+      deleteButton.textContent = 'Delete';
+      deleteButton.onclick = async () => {
+          try {
+              await apiRequest(`/api/videos/${v.id}`, 'DELETE');
+              loadVideos(); // Refresh the list
+          } catch (e) {
+              showError(e.message);
+          }
+      };
+      li.appendChild(deleteButton);
       videoList.appendChild(li);
     });
   } catch (e) {

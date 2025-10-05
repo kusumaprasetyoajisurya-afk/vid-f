@@ -14,6 +14,7 @@ const videos = [
   { id: 2, title: "Video 2", price: 15 },
   { id: 3, title: "Video 3", price: 20 },
 ];
+let nextVideoId = 4;
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -88,13 +89,29 @@ app.post('/api/videos', requireLogin, (req, res) => {
     return res.status(400).json({ error: 'Title and price required' });
   }
   const newVideo = {
-    id: videos.length + 1,
+    id: nextVideoId++,
     title,
     price: Number(price),
   };
   videos.push(newVideo);
   res.json(newVideo);
 });
+
+// Delete a video
+app.delete('/api/videos/:id', requireLogin, (req, res) => {
+    const videoId = parseInt(req.params.id, 10);
+    const videoIndex = videos.findIndex(v => v.id === videoId);
+
+    if (videoIndex === -1) {
+        return res.status(404).json({ error: 'Video not found' });
+    }
+
+    // In a real app, you would check if the user owns the video
+    videos.splice(videoIndex, 1);
+
+    res.json({ message: 'Video deleted successfully' });
+});
+
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
