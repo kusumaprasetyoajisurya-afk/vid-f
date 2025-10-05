@@ -1,14 +1,15 @@
-import { withSessionRoute } from '../../lib/session';
+import { getSession } from "../../lib/session";
 
-export default withSessionRoute(async (req, res) => {
-  if (req.session.user) {
+export default async function handler(req, res) {
+  const session = await getSession(req, res);
+  if (session.user) {
     res.json({
       isLoggedIn: true,
-      ...req.session.user,
+      ...session.user,
     });
   } else {
     res.json({
       isLoggedIn: false,
     });
   }
-});
+}

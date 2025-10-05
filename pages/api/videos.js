@@ -1,8 +1,9 @@
-import { withSessionRoute } from '../../lib/session';
+import { getSession } from "../../lib/session";
 import { connectToDatabase } from '../../lib/db';
 
-export default withSessionRoute(async (req, res) => {
-  if (!req.session.user) {
+export default async function handler(req, res) {
+  const session = await getSession(req, res);
+  if (!session.user) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
@@ -13,4 +14,4 @@ export default withSessionRoute(async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
   }
-});
+}
