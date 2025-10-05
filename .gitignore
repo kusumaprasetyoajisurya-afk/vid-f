@@ -27,3 +27,4 @@ functions/lib
 .DS_Store
 *.log
 
+.env
